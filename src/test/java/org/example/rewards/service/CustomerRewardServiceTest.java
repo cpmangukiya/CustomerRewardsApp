@@ -1,16 +1,14 @@
 package org.example.rewards.service;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import org.example.interfaces.pojo.Eligibility;
+import org.example.interfaces.service.CheckEligibilityAPIInterface;
+import org.example.rewards.dao.ChannelTypeRewardDAO;
 import org.example.rewards.pojo.ChannelType;
 import org.example.rewards.pojo.Reward;
-import org.example.rewards.service.CustomerRewardServiceInterface;
-import org.example.rewards.service.EligibilityCheckerServiceInterface;
-import org.example.rewards.dao.ChannelTypeRewardDAOInterface;
-import org.example.interfaces.service.CheckEligibilityAPIInterface;
+import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,7 +20,7 @@ public class CustomerRewardServiceTest {
 
     private CustomerRewardServiceInterface customerRewardServiceInterface;
 
-    public CustomerRewardServiceTest() {
+    public CustomerRewardServiceTest() throws Exception {
         customerRewardServiceInterface = new CustomerRewardService();
         EligibilityCheckerServiceInterface eligibilityCheckerServiceInterface = new EligibilityCheckerService();
 
@@ -36,8 +34,8 @@ public class CustomerRewardServiceTest {
         when(checkEligibilityAPIInterface.getDetailsByCustomerId("ACT008")).thenThrow(new Exception("Something went wrong"));
         eligibilityCheckerServiceInterface.setCheckEligibilityAPIInterface(checkEligibilityAPIInterface);
 
-        customerRewardServiceInterface.setEligibilityCheckerServiceInterface(new EligibilityCheckerService());
-        customerRewardServiceInterface.setChannelTypeRewardDAOInterface(new hannelTypeRewardDAO());
+        customerRewardServiceInterface.setEligibilityCheckerServiceInterface(eligibilityCheckerServiceInterface);
+        customerRewardServiceInterface.setChannelTypeRewardDAOInterface(new ChannelTypeRewardDAO());
     }
 
     /**
@@ -64,7 +62,7 @@ public class CustomerRewardServiceTest {
      * Test if no reward available for valid account no and subscriptions
      */
     @Test
-    public void shouldBeAbleFetchEmptyListOfRewards() {
+    public void shouldBeAbleFetchEmptyListOfRewardsIfNoMatchingSubs() {
         HashSet<ChannelType> channelTypeSet = new HashSet<ChannelType>();
         channelTypeSet.add(new ChannelType("SKITS"));
         channelTypeSet.add(new ChannelType("NEWS"));
@@ -77,7 +75,7 @@ public class CustomerRewardServiceTest {
      * Test if account no not eligible
      */
     @Test
-    public void shouldBeAbleFetchEmptyListOfRewards() {
+    public void shouldBeAbleFetchEmptyListOfRewardsIfNotEligible() {
         HashSet<ChannelType> channelTypeSet = new HashSet<ChannelType>();
         channelTypeSet.add(new ChannelType("SKITS"));
         channelTypeSet.add(new ChannelType("NEWS"));

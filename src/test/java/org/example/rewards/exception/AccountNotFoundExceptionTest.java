@@ -4,7 +4,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import org.example.rewards.exception.AccountNotFoundException;
 
 /**
  * Test for custom AccountNotFoundException

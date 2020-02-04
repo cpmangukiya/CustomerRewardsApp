@@ -2,7 +2,6 @@ package org.example.interfaces.pojo;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import org.example.interfaces.pojo.Eligibility;
 
 /**
  * Test Eligibility POJO

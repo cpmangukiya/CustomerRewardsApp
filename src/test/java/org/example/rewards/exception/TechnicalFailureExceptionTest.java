@@ -4,7 +4,6 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import org.example.rewards.exception.TechnicalFailureException;
 
 /**
  * Test for custom TechnicalFailureException

@@ -1,19 +1,13 @@
 package org.example.rewards.service;
 
-import org.example.pojo.ChannelType;
-import org.example.rewards.exception.AccountNotFoundException;
-import org.example.rewards.exception.TechnicalFailureException;
+import org.example.interfaces.pojo.Eligibility;
+import org.example.interfaces.service.CheckEligibilityAPIInterface;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.example.rewards.service.EligibilityCheckerServiceInterface;
-import org.example.interfaces.service.CheckEligibilityAPIInterface;
 
 /**
  * Test service responsible for fetching customer reward
@@ -22,8 +16,8 @@ public class EligibilityCheckerServiceTest {
 
     private EligibilityCheckerServiceInterface eligibilityCheckerServiceInterface;
 
-    public EligibilityCheckerServiceTest() {
-        eligibilityCheckerServiceInterface = new EligibilityCheckerServiceInterface();
+    public EligibilityCheckerServiceTest() throws Exception {
+        eligibilityCheckerServiceInterface = new EligibilityCheckerService();
         // Mockit
         CheckEligibilityAPIInterface checkEligibilityAPIInterface = mock(CheckEligibilityAPIInterface.class);
         when(checkEligibilityAPIInterface.getDetailsByCustomerId("ACT001")).thenReturn(new Eligibility("ACT001", "ELIGIBLE", true));
@@ -39,7 +33,7 @@ public class EligibilityCheckerServiceTest {
      * Test when account no is eligible
      */
     @Test
-    public void shouldBeAbleReturnTrueWhenEligible() {
+    public void shouldBeAbleReturnTrueWhenEligible() throws Exception {
         boolean isEligible = eligibilityCheckerServiceInterface.checkEligibility("ACT001");
         assertTrue(isEligible);
     }
@@ -48,7 +42,7 @@ public class EligibilityCheckerServiceTest {
      * Test when account no is not eligible
      */
     @Test
-    public void shouldBeAbleReturnFalseWhenNotEligible() {
+    public void shouldBeAbleReturnFalseWhenNotEligible() throws Exception {
         boolean isEligible = eligibilityCheckerServiceInterface.checkEligibility("ACT003");
         assertTrue(!isEligible);
     }
@@ -58,11 +52,14 @@ public class EligibilityCheckerServiceTest {
      */
     @Test
     public void shouldBeAbleCatchWhenTechErrorFound() {
+        Exception expected = null;
         try {
             boolean isEligible = eligibilityCheckerServiceInterface.checkEligibility("ACT004");
         } catch (Exception e) {
-            assertTrue(e instanceof TechnicalFailureException);
+            expected = e;
         }
+        assertNotNull(expected);
+        assertTrue(expected instanceof Exception);
     }
 
     /**
@@ -70,18 +67,21 @@ public class EligibilityCheckerServiceTest {
      */
     @Test
     public void shouldBeAbleCatchWhenAccountFound() {
+        Exception expected = null;
         try {
             boolean isEligible = eligibilityCheckerServiceInterface.checkEligibility("ACT005");
         } catch (Exception e) {
-            assertTrue(e instanceof AccountNotFoundException);
+            expected = e;
         }
+        assertNotNull(expected);
+        assertTrue(expected instanceof Exception);
     }
 
     /**
      * Test if wrong data sent
      */
     @Test
-    public void shouldBeAbleFetchEmptyListOfRewardsIfValidDataNotSent() {
+    public void shouldBeAbleFetchEmptyListOfRewardsIfValidDataNotSent() throws Exception {
         boolean isEligible = eligibilityCheckerServiceInterface.checkEligibility(null);
         assertTrue(!isEligible);
     }
@@ -91,10 +91,13 @@ public class EligibilityCheckerServiceTest {
      */
     @Test
     public void shouldBeAbleCatchWhenExceptionOccurs() {
+        Exception expected = null;
         try {
             boolean isEligible = eligibilityCheckerServiceInterface.checkEligibility("ACT008");
         } catch (Exception e) {
-            assertTrue(e instanceof Exception);
+             expected = e;
         }
+        assertNotNull(expected);
+        assertTrue(expected instanceof Exception);
     }
 }
